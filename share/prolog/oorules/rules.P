@@ -1709,7 +1709,7 @@ reasonClassCallsMethod_F(Class, Method) :-
 
 % This is an attempt by Ed to avoid recomputing all of reasonMergeClasses when we invalidate
 % the tables because of new facts.
-:- table reasonMergeClasses_A/2 as incremental.
+%:- table reasonMergeClasses_A/2 as incremental.
 :- table reasonMergeClasses_B/2 as incremental.
 :- table reasonMergeClasses_C/2 as incremental.
 :- table reasonMergeClasses_D/2 as incremental.
