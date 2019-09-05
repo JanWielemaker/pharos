@@ -1,0 +1,9 @@
+:- [report].
+:- [setup].
+
+:- assert(debuggingEnabled).
+:- assert(rTTIEnabled).
+
+run :-
+    solve('tetris.exe.facts'),
+    reportResults.
