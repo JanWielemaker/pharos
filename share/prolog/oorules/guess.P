@@ -18,7 +18,7 @@ tryBinarySearchInt(PosPred, NegPred, L) :-
      call(NegPred, X)).
 
 tryBinarySearchInt(PosPred, NegPred, List) :-
-    length(List, ListLen),
+    length(List, _ListLen),
     %debug('tryBinarySearch on '), debug(ListLen), debug(': '), debugln(List),
     % First try the positive guess on everything. If that fails, we want to retract all the
     % guesses and recurse on a subproblem.
@@ -618,11 +618,11 @@ guessClassHasNoBaseB(Class) :-
 
     factVFTableWrite(_Insn1, Constructor, 0, VFTable),
     not((
-               factVFTableWrite(_Insn2, Constructor, _Offset, OtherVFTable),
+               factVFTableWrite(_Insn2, Constructor, _0Offset, OtherVFTable),
                iso_dif(VFTable, OtherVFTable)
        )),
 
-    not(factDerivedClass(Class, _BaseClass, _Offset)),
+    not(factDerivedClass(Class, _BaseClass, _0Offset)),
     not(factClassHasNoBase(Class)),
     not(factClassHasUnknownBase(Class)).
 
@@ -1128,7 +1128,7 @@ likelyDeletingDestructor(DeletingDestructor, RealDestructor) :-
     % And the deleting destructor must also call delete (we think), since that's what makes it
     % deleting.  Using this instead of the more complicated rule below led toa very slight
     % improvement in the fast test suite F=0.43 -> F=0.44.
-    insnCallsDelete(_DeleteInsn, DeletingDestructor, _SV),
+    insnCallsDelete(DeleteInsn, DeletingDestructor, _SV),
 
     % This condition is complicated.  We want to ensure that the thing actually being deleted
     % is the this-pointer passed to the deleting destructor.  But the detection of parameters
@@ -1140,8 +1140,8 @@ likelyDeletingDestructor(DeletingDestructor, RealDestructor) :-
     % RealDestructorChange! (comment out through true).
     thisCallMethod(DeletingDestructor, ThisPtr, _Certainty),
     (
-        insnCallsDelete(_DeleteInsn, DeletingDestructor, ThisPtr);
-        insnCallsDelete(_DeleteInsn, DeletingDestructor, invalid)
+        insnCallsDelete(DeleteInsn, DeletingDestructor, ThisPtr);
+        insnCallsDelete(DeleteInsn, DeletingDestructor, invalid)
     ),
     true.
 

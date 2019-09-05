@@ -22,9 +22,9 @@ progress(N) :-
 % just going to pass them to debug for a while longer at least.  We should really convert the
 % boolean that enables and disables debugging into a desired log level, and user it here as
 % well.
-log(Importance, Message) :-
+log(_Importance, Message) :-
     debug(Message).
-logln(Importance, Message) :-
+logln(_Importance, Message) :-
     debugln(Message).
 
 % ============================================================================================

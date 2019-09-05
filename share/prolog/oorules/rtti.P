@@ -24,7 +24,7 @@ rTTITDA2VFTable(TDA, VFTable) :-
 rTTITDA2Class(TDA, Class) :-
     % First turn the TypeDescriptor address into a VFTable address.
     rTTITypeDescriptor(TDA, _TIVTable, _Name),
-    rTTICompleteObjectLocator(Pointer, _COLA, TDA, _CHDA, _Offset, _O2),
+    rTTICompleteObjectLocator(Pointer, _COLA, TDA, _CHDA, Offset, _O2),
     VFTable is Pointer + 4,
     % Now to turn the VFTable address into a class ID.
     % Presumably there's at least one method that write the VFTable pointer.
@@ -32,7 +32,7 @@ rTTITDA2Class(TDA, Class) :-
     % But if that method is confused about which VFTable is the primary, don't use that method
     % to determine the correct class.   Presumably there will be another non-conflicted method
     % that will just produce the correct answer.
-    not(possibleVFTableOverwrite(_, _, Method, _Offset, _VFTable1, _VFTable2)),
+    not(possibleVFTableOverwrite(_, _, Method, Offset, _VFTable1, _VFTable2)),
     % Finally, get the current class representative for that method.
 
     % Because of inlining and optimization, destructors should not be used for correlating TDAs

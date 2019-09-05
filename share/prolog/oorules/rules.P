@@ -1521,9 +1521,9 @@ reasonClassHasUnknownBase_D(Class) :-
     % manage is to know that there's a base class...
     rTTIEnabled,
     rTTIValid,
-    rTTIInheritsFrom(DerivedTDA, _BaseTDA, _Attributes, _Offset, _P, _V),
+    rTTIInheritsFrom(DerivedTDA, _BaseTDA, _Attributes, Offset, _P, _V),
     rTTITDA2Class(DerivedTDA, Class),
-    not(factDerivedClass(Class, _BaseClass, _Offset)),
+    not(factDerivedClass(Class, _BaseClass, Offset)),
     not(factClassHasUnknownBase(Class)),
     %debug('reasonClassHasUnknownBase_D('),
     %debug(Class), debugln(').'),
@@ -1811,14 +1811,14 @@ reasonMergeClasses_C(Class, ExistingClass) :-
     % If we have no bases, it can't be on a base class.
     factClassHasNoBase(Class),
     % And if there's no object (embedded or base?) at offset zero...
-    not(factObjectInObject(Class, _InnerClass, 0)),
+    not(factObjectInObject(Class, _0InnerClass, 0)),
 
     find(Method, ExistingClass),
     iso_dif(Class, ExistingClass),
     % Confusingly, the method's class must also have no base and no object at offset zero,
     % because the method being called could actually be the base class method...
     factClassHasNoBase(ExistingClass),
-    not(factObjectInObject(ExistingClass, _InnerClass, 0)),
+    not(factObjectInObject(ExistingClass, _0InnerClass, 0)),
 
     %debug('reasonMergeClasses_C('),
     %debug(Class), debug(', '),

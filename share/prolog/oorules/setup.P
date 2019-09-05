@@ -223,8 +223,8 @@ classArgs(factClassSizeLTE/2, 1).
 :- import member/2 from lists.
 :- import incr_assert/1, incr_asserta/1, incr_retract/1 from increval.
 
-:- import gpp_options from parse.
-:- assert(gpp_options('-P -m -nostdinc')).
+% :- import gpp_options from parse.
+% :- assert(gpp_options('-P -m -nostdinc')).
 
 % Replacing xpp_on with xpp_dump in the following line will cause all our prolog rules to be
 % placed into a monolothic file, setup.pl_gpp.
@@ -245,17 +245,17 @@ classArgs(factClassSizeLTE/2, 1).
 % Other modules.
 % ============================================================================================
 
-#include "util.pl"
-#include "initial.pl"
-#include "rtti.pl"
-#include "rules.pl"
-#include "guess.pl"
-#include "forward.pl"
-#include "insanity.pl"
-#include "complete.pl"
-#include "final.pl"
-#include "softcut.pl"
-#include "class.pl"
+:- include(util).
+:- include(initial).
+:- include(rtti).
+:- include(rules).
+:- include(guess).
+:- include(forward).
+:- include(insanity).
+:- include(complete).
+:- include(final).
+:- include(softcut).
+:- include(class).
 
 :- debug_ctl(profile, on).
 :- debug_ctl(prompt, off).
@@ -551,7 +551,7 @@ solve :-
     logfatalln('No complete solution was found!')).
 
 % Per Teri
-:- import load_dync/2 from consult.
+% :- import load_dync/2 from consult.
 solve(X) :-
     load_dync(X),
     solve.
