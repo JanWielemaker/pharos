@@ -63,6 +63,11 @@ all([H|T]) :-
     all(T).
 
 % This is a "safe" replacement for dif() for when tabling is enabled.
+:- if(current_prolog_flag(version_data, swi(_,_,_,_))).
+iso_dif(X, Y) :-
+    assertion(?=(X, Y)),
+    X \= Y.
+:- else.
 iso_dif(X, Y) :-
    X \== Y,
    ( X \= Y -> true
@@ -72,6 +77,7 @@ iso_dif(X, Y) :-
    write('X='), write(X), write(' Y='), writeln(Y),
    throw(error(instantiation_error,iso_dif/2))
    ).
+:- endif.
 
 % list_min([5,2,8,1,4], Min). unifies Min with 1.
 list_min([], X, X). % Termination rule.

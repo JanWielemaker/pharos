@@ -1,3 +1,7 @@
+goal_expansion(not(X), \+(X)).
+% the predicate provides a check whether this simplification is correct.
+goal_expansion(iso_dif(X,Y), X \= Y).
+
 :- [report].
 :- [setup].
 
@@ -5,7 +9,7 @@
 :- assert(rTTIEnabled).
 
 run :-
-    set_prolog_flag(stack_limit, 10 000 000 000),
+%   set_prolog_flag(stack_limit, 10 000 000 000),
     solve('tetris.exe.facts'),
     reportResults.
 
