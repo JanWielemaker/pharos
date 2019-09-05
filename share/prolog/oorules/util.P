@@ -3,6 +3,8 @@
 % Basic utilities for Prolog.
 % ============================================================================================
 
+:- import domain_error/4 from error_handler.
+
 :- import append/3 from lists.
 :- import member/2 from lists.
 
