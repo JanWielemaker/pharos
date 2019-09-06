@@ -1,5 +1,9 @@
 # Pharos Static Binary Analysis Framework
 
+> This fork contains a port to use SWI-Prolog experimental tabling
+> intead of XSB.  Please checkout the branch `swi` and find details
+> in share/prolog/oorules/README.md
+
 The Pharos static binary analysis framework is a project of the
 Software Engineering Institute at Carnegie Mellon University.  The
 framework is designed to facilitate the automated analysis of binary
