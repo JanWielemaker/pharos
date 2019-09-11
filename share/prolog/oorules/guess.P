@@ -27,7 +27,7 @@ tryBinarySearchInt(PosPred, NegPred, List) :-
     % We failed! Recurse on first half of the list
     %debug('We failed! tryBinarySearch on '), debugln(List),
     length(List, ListLen),
-    NewListLen is min(16, ListLen/2),
+    NewListLen is min(16, (ListLen+1)//2),
 
     take(NewListLen, List, NewList),
 
