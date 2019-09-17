@@ -196,8 +196,8 @@ eventualThunk(Thunk, Func) :-
     not(thunk(Func, _)).
 
 eventualThunk(Thunk, Func) :-
-    thunk(Thunk, Middle),
-    eventualThunk(Middle, Func).
+    eventualThunk(Middle, Func),
+    thunk(Thunk, Middle).
 
 :- table dethunk/2 as opaque.
 dethunk(Thunk, Result) :-
