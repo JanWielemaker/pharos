@@ -56,11 +56,29 @@ tuple_to_list((A,B), L) :-
 tuple_to_list(A, [A]).
 
 % Call all predicates in list
-all([]).
-all([H|T]) :-
+all(L) :-
+    length(L, Len),
+    write('Call to all/1 with '),
+    write(Len),
+    writeln(' elements...'),
+    cputime(BeforeTime),
+    all_int(L),
+    cputime(AfterTime),
+    DiffTime is AfterTime - BeforeTime,
+    write('... took '),
+    write(DiffTime),
+    write(' seconds on '),
+    write(Len),
+    write(' elements ('),
+    Avg is DiffTime / (Len + 1),
+    write(Avg),
+    writeln(' seconds avg).').
+
+all_int([]).
+all_int([H|T]) :-
     %write('I am now calling '), writeln(H),
     call(H),
-    all(T).
+    all_int(T).
 
 % This is a "safe" replacement for dif() for when tabling is enabled.
 :- if(current_prolog_flag(version_data, swi(_,_,_,_))).
@@ -223,6 +241,23 @@ debug_time(X) :-
 
 debug_store(X) :-
     debuggingStoreEnabled -> show_store(X) ; true.
+
+% For use with timed_call
+
+show_progress:-
+    logdebugln('-------------------------------------------'),
+    cputime(T),
+    conget(numfacts,FN),
+    conget(guesses,GN),
+    conget(reasonForwardSteps,RFN),
+    logdebugln('total number of facts is'(FN,T)),
+    logdebugln('total number of guesses is'(GN,T)),
+    logdebugln('total number of reasoningForward steps is'(RFN,T)),
+    statistics.
+    %statistics(summarize_idg).
+
+shut_down :-
+    show_progress, halt.
 
 /* Local Variables:   */
 /* mode: prolog       */

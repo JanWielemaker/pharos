@@ -100,7 +100,7 @@ reasonMethod_L(Method) :-
     factMethod(Caller),
     % Intentionally NOT a validFuncOffset!
     funcOffset(_Insn1, Caller, Method, 0),
-    debug('reasonMethod_L('), debug(Method), debugln(').'),
+    %% debug('reasonMethod_L('), debug(Method), debugln(').'),
     % Require that the Method also read/use the value.
     funcParameter(Method, ecx, _SymbolicValue),
     %debug('reasonMethod_L('), debug(Method), debugln(').'),
