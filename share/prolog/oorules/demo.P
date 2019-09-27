@@ -1,3 +1,24 @@
+:- multifile
+     webstat:stat_series/2,
+     webstat:stat_value/2.
+
+webstat:stat_series(numfacts,
+                     _{label: 'Pharos #facts'
+                      }).
+webstat:stat_series(guesses,
+                     _{label: 'Pharos #guesses'
+                      }).
+webstat:stat_series(reasonForwardSteps,
+                     _{label: 'Pharos #reasoningForward steps'
+                      }).
+
+webstat:stat_value(numfacts, Value) :-
+     conget(numfacts,Value).
+webstat:stat_value(guesses, Value) :-
+     conget(guesses,Value).
+webstat:stat_value(reasonForwardSteps, Value) :-
+     conget(reasonForwardSteps,Value).
+
 goal_expansion(not(X), \+(X)).
 % the predicate provides a check whether this simplification is correct.
 goal_expansion(iso_dif(X,Y), X \= Y).
