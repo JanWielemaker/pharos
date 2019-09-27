@@ -8,4 +8,11 @@ default_user_error_handler(X) :-
     error_writeln(['Aborting due to error: ', X]),halt(1).
 
 run(X) :-
-    solve(X),reportResults,halt.
+    profilingEnabled ->
+	(timed_call(solve(X), [repeating(60000, show_progress),
+         max(3600000, shut_down)]),
+	 reportResults,
+	 halt);
+        ((solve(X),
+         reportResults,
+         halt)).

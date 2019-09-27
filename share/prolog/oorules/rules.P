@@ -100,7 +100,7 @@ reasonMethod_L(Method) :-
     factMethod(Caller),
     % Intentionally NOT a validFuncOffset!
     funcOffset(_Insn1, Caller, Method, 0),
-    debug('reasonMethod_L('), debug(Method), debugln(').'),
+    %% debug('reasonMethod_L('), debug(Method), debugln(').'),
     % Require that the Method also read/use the value.
     funcParameter(Method, ecx, _SymbolicValue),
     %debug('reasonMethod_L('), debug(Method), debugln(').'),
@@ -405,11 +405,11 @@ reasonNOTRealDestructor_E(Method) :-
 
 % Because a method on a class cannot destruct itself (unless it's a deleting destructor).
 reasonNOTRealDestructor_F(Method) :-
+    validFuncOffset(_Insn, Caller, Method, 0),
     factMethod(Method),
     find(Method, Class),
     find(Caller, Class),
     iso_dif(Method, Caller),
-    validFuncOffset(_Insn, Caller, Method, 0),
     factNOTDeletingDestructor(Caller),
     % Debugging
     %debug('reasonNOTRealDestructor_F('),
@@ -2278,15 +2278,15 @@ reasonNOTMergeClasses_O(Class1, Class2) :-
 % ourself would imply exactly that.  It's not obvious that the merger is blocked by any other
 % rule at present.
 reasonNOTMergeClasses_P(Class1, Class2) :-
-    factMethod(Caller),
-    factMethod(Method),
-    iso_dif(Method, Caller),
     validFuncOffset(_Insn, Caller, Method, Offset),
-    iso_dif(Offset, 0),
-    (factConstructor(Method); factDeletingDestructor(Method); factRealDestructor(Method)),
     find(Method, Class1),
     find(Caller, Class2),
     iso_dif(Class1, Class2),
+    factMethod(Caller),
+    factMethod(Method),
+    iso_dif(Method, Caller),
+    iso_dif(Offset, 0),
+    (factConstructor(Method); factDeletingDestructor(Method); factRealDestructor(Method)),
     % Debugging
     %not(factNOTMergeClasses(Class1, Class2)),
     %not(factNOTMergeClasses(Class2, Class1)),

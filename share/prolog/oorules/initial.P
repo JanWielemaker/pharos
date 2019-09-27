@@ -199,7 +199,7 @@ eventualThunk(Thunk, Func) :-
     eventualThunk(Middle, Func),
     thunk(Thunk, Middle).
 
-:- table dethunk/2 as opaque.
+%:- table dethunk/2 as opaque.
 dethunk(Thunk, Result) :-
     eventualThunk(Thunk, Target) -> Result = Target; Result = Thunk.
 

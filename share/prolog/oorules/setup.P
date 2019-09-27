@@ -271,25 +271,28 @@ classArgs(factClassSizeLTE/2, 1).
 % Use conset/conget per Teri.
 
 :- import conset/2, conget/2 from machine.
-:- dynamic numfacts/1.
+%:- dynamic numfacts/1.
 :- conset(numfacts,0).
-delta_numfacts(D) :- conget(numfacts,Y), Z is Y+D, conset(numfacts,Z).
+:- conset(guesses,0).
+:- conset(reasonForwardSteps,0).
+	 
+delta_con(Con,Delta):- conget(Con,Y), Z is Y+Delta, conset(Con,Z).
 
 try_assert(X) :- X, !.
 try_assert(X) :- try_assert_real(X).
-try_assert_real(X) :- delta_numfacts(1), incr_asserta(X).
+try_assert_real(X) :- delta_con(numfacts, 1), incr_asserta(X).
 try_assert_real(X) :-
     %logtrace('Retracting '), logtrace(X), logtraceln('...'),
-    delta_numfacts(-1),
+    delta_con(numfacts, -1),
     incr_retract(X),
     fail.
 
 try_retract(X) :- not(X), !.
 try_retract(X) :- try_retract_real(X).
-try_retract_real(X) :- delta_numfacts(-1), incr_retract(X).
+try_retract_real(X) :- delta_con(numfacts, -1), incr_retract(X).
 try_retract_real(X) :-
     %logtrace('Asserting '), logtrace(X), logtraceln('...'),
-    delta_numfacts(1),
+    delta_con(numfacts, 1),
     incr_asserta(X),
     fail.
 
@@ -385,6 +388,7 @@ mergeClasses(M1, M2) :-
 % in the correct order should spend less time evaluating rules that don't accomplish anything.
 
 reasonForward :-
+    delta_con(reasonForwardSteps,1),
     once((concludeMethod(Out);
           concludeVFTableOverwrite(Out);
           concludeVirtualFunctionCall(Out);
@@ -459,7 +463,7 @@ reasoningLoop :-
 % well justified, but rather a hodge-podge of experimental results and gut feelings.  Cory has
 % no idea how to reason through this properly, so he's just going to take some notes.
 guess :-
-
+        delta_con(guesses,1),
         % These three guesses are first on the principle that guesing them has lots of
         % consequences, and that they're probably not wrong, so there's little harm in guessing
         % them first.

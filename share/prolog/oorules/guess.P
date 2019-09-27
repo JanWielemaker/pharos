@@ -398,6 +398,7 @@ guessMethod :-
 
 % A variation of the previous rule using thisPtrUsage and passing around a this-pointer to
 % multiple methods.  Just guess the first and the rest will follow...
+:- table guessMethodE/1 as incremental.
 guessMethodE(Method) :-
     % This may need to be weakened past uncertain... :-(
     thisCallMethod(Method, _ThisPtr, uncertain),
@@ -1110,6 +1111,7 @@ tryNOTDeletingDestructor(Method) :-
     try_assert(guessedNOTDeletingDestructor(Method)).
 
 % A helper for guessing deleting destructors.
+:- table likelyDeletingDestructor/2 as incremental.
 likelyDeletingDestructor(DeletingDestructor, RealDestructor) :-
     % This indicates that the method met some basic criteria in C++.
     possibleDestructor(DeletingDestructor),
