@@ -6,10 +6,12 @@
 :- import maplist/2 from swi.
 
 writeHelper([]).
-writeHelper([H|[]]) :-
+writeHelper([H]) :-
+    !,
     writeHex(H).
 writeHelper([H|T]) :-
     writeHex(H), write(', '), writeHelper(T).
+
 writeList(L) :-
     write('['), writeHelper(L), write(']').
 
@@ -42,8 +44,9 @@ reportFinalVFTable((V, C, L, A, N)) :-
 
 reportVFTables :-
     setof((V, C, L, A, N), finalVFTable(V, C, L, A, N), Set),
+    !,
     maplist(reportFinalVFTable, Set).
-reportVFTables :- true.
+reportVFTables.
 
 reportFinalVFTableEntry((A, O, M)) :-
     write('finalVFTableEntry('),
@@ -53,8 +56,9 @@ reportFinalVFTableEntry((A, O, M)) :-
 
 reportVFTableEntries :-
     setof((A, O, M), finalVFTableEntry(A, O, M), Set),
+    !,
     maplist(reportFinalVFTableEntry, Set).
-reportVFTableEntries :- true.
+reportVFTableEntries.
 
 % ============================================================================================
 % Virtual Base Tables
@@ -70,8 +74,9 @@ reportFinalVBTable((V, C, S, O)) :-
 
 reportVBTables :-
     setof((V, C, S, O), finalVBTable(V, C, S, O), Set),
+    !,
     maplist(reportFinalVBTable, Set).
-reportVBTables :- true.
+reportVBTables.
 
 reportFinalVBTableEntry((A, O, V)) :-
     write('finalVBTableEntry('),
@@ -81,8 +86,9 @@ reportFinalVBTableEntry((A, O, V)) :-
 
 reportVBTableEntries :-
     setof((A, O, V), finalVBTableEntry(A, O, V), Set),
+    !,
     maplist(reportFinalVBTableEntry, Set).
-reportVBTableEntries :- true.
+reportVBTableEntries.
 
 % ============================================================================================
 % Class Definitions
@@ -100,8 +106,9 @@ reportFinalClass((C, V, S, L, R, M)) :-
 
 reportClasses :-
     setof((C, V, S, L, R, M), finalClass(C, V, S, L, R, M), Set),
+    !,
     maplist(reportFinalClass, Set).
-reportClasses :- true.
+reportClasses.
 
 % ============================================================================================
 % Resolved Virtual Function Calls
@@ -115,8 +122,9 @@ reportFinalResolvedVirtualCall((I, V, T)) :-
 
 reportResolvedVirtualCalls :-
     setof((I, V, T), finalResolvedVirtualCall(I, V, T), Set),
+    !,
     maplist(reportFinalResolvedVirtualCall, Set).
-reportResolvedVirtualCalls :- true.
+reportResolvedVirtualCalls.
 
 % ============================================================================================
 % Embedded objects.
@@ -132,8 +140,9 @@ reportFinalEmbeddedObject((C, O, E, X)) :-
 
 reportEmbeddedObjects :-
     setof((C, O, E, X), finalEmbeddedObject(C, O, E, X), Set),
+    !,
     maplist(reportFinalEmbeddedObject, Set).
-reportEmbeddedObjects :- true.
+reportEmbeddedObjects.
 
 % ============================================================================================
 % Inheritance relationships
@@ -150,8 +159,9 @@ reportFinalInheritance((D, B, O, C, V)) :-
 
 reportInheritances :-
     setof((D, B, O, C, V), finalInheritance(D, B, O, C, V), Set),
+    !,
     maplist(reportFinalInheritance, Set).
-reportInheritances :- true.
+reportInheritances.
 
 % ============================================================================================
 % Definitions of members on classes.
@@ -168,8 +178,9 @@ reportFinalMember((C, O, S, L)) :-
 
 reportMembers :-
     setof((C, O, S, L), finalMember(C, O, S, L), Set),
+    !,
     maplist(reportFinalMember, Set).
-reportMembers :- true.
+reportMembers.
 
 % ============================================================================================
 % Definitions of members on classes.
@@ -184,8 +195,9 @@ reportFinalMemberAccess((C, O, S, E)) :-
 
 reportMemberAccesses :-
     setof((C, O, S, E), finalMemberAccess(C, O, S, E), Set),
+    !,
     maplist(reportFinalMemberAccess, Set).
-reportMemberAccesses :- true.
+reportMemberAccesses.
 
 % ============================================================================================
 % Method Properties
@@ -199,8 +211,9 @@ reportFinalMethodProperty((M, P, C)) :-
 
 reportMethodProperties :-
     setof((M, P, C), finalMethodProperty(M, P, C), Set),
+    !,
     maplist(reportFinalMethodProperty, Set).
-reportMethodProperties :- true.
+reportMethodProperties.
 
 % ============================================================================================
 % Some thunk analysis (debugging?)
@@ -213,8 +226,9 @@ reportEventualThunk((T, F)) :-
 
 reportEventualThunks :-
     setof((T, F), eventualThunk(T, F), Set),
+    !,
     maplist(reportEventualThunk, Set).
-reportEventualThunks :- true.
+reportEventualThunks.
 
 reportUniqueThunk((T, F)) :-
     write('uniqueThunk('),
@@ -223,8 +237,9 @@ reportUniqueThunk((T, F)) :-
 
 reportUniqueThunks :-
     setof((T, F), uniqueThunk(T, F), Set),
+    !,
     maplist(reportUniqueThunk, Set).
-reportUniqueThunks :- true.
+reportUniqueThunks.
 
 reportConflictedThunk((T, O, F)) :-
     write('conflictedThunk('),
@@ -234,8 +249,9 @@ reportConflictedThunk((T, O, F)) :-
 
 reportConflictedThunks :-
     setof((T, O, F), conflictedThunk(T, O, F), Set),
+    !,
     maplist(reportConflictedThunk, Set).
-reportConflictedThunks :- true.
+reportConflictedThunks.
 
 % ============================================================================================
 % The main reporting rule.
