@@ -458,8 +458,7 @@ reasoningLoop :-
     ; logerrorln('Unable to backtrace into previous reasoningLoop.  The results returned by this run may be less accurate as a result.')).
 
 % The only way to terminate the reasoningLoop is if there are no more guesses
-reasoningLoop :-
-    true.
+reasoningLoop.
 
 % --------------------------------------------------------------------------------------------
 % The performance of our code is highly dependent on the ordering of these guesses.  Making bad
