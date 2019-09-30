@@ -239,8 +239,11 @@ debug_time(X) :-
     write(X), writeln(Seconds)
     ; true.
 
-debug_store(X) :-
-    debuggingStoreEnabled -> show_store(X) ; true.
+debug_store(_).
+% JW: Can't find show_store/1 aywhere. Only in CHR, but that seems
+% unrelated
+% debug_store(X) :-
+%    debuggingStoreEnabled -> show_store(X) ; true.
 
 % For use with timed_call
 

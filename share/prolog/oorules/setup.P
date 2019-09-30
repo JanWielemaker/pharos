@@ -275,7 +275,7 @@ classArgs(factClassSizeLTE/2, 1).
 :- conset(numfacts,0).
 :- conset(guesses,0).
 :- conset(reasonForwardSteps,0).
-	 
+
 delta_con(Con,Delta):- conget(Con,Y), Z is Y+Delta, conset(Con,Z).
 
 try_assert(X) :- X, !.
@@ -450,6 +450,7 @@ reasoningLoop :-
         loginfoln('Constraint checks succeeded, guess accepted!'),
         (logwarnln('Constraint checks failed, retracting guess!'), fail)
        ),
+    !,
     reasoningLoop.
 
 % The only way to terminate the reasoningLoop is if we are complete.
