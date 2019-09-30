@@ -446,17 +446,20 @@ reasoningLoop :-
     progress(N),
     sanityChecks,
     reasonForwardAsManyTimesAsPossible,
-    if_(sanityChecks,
-        loginfoln('Constraint checks succeeded, guess accepted!'),
-        (logwarnln('Constraint checks failed, retracting guess!'), fail)
-       ),
+    (sanityChecks
+    -> loginfoln('Constraint checks succeeded, guess accepted!')
+    ; (logwarnln('Constraint checks failed, retracting guess!'), fail)),
+    % If we have reached this point, sanity checks have passed, and we are choosing not to
+    % backtrack.  In particular, this means we will not backtrack into a previous
+    % reasoningLoop.  If we would have, it will trigger the error message below.
     !,
-    reasoningLoop.
+    (reasoningLoop
+    -> true
+    ; logerrorln('Unable to backtrace into previous reasoningLoop.  The results returned by this run may be less accurate as a result.')).
 
-% The only way to terminate the reasoningLoop is if we are complete.
+% The only way to terminate the reasoningLoop is if there are no more guesses
 reasoningLoop :-
     true.
-%    checkCompleteness.
 
 % --------------------------------------------------------------------------------------------
 % The performance of our code is highly dependent on the ordering of these guesses.  Making bad
