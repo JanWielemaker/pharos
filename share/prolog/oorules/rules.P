@@ -2074,17 +2074,15 @@ reasonNOTMergeClasses_E(Class1, Class2) :-
     % equally to constructors and destructors.
     factVFTableWrite(_Insn1, Method1, ObjectOffset, VFTable1),
     factVFTableWrite(_Insn2, Method2, ObjectOffset, VFTable2),
-    iso_dif(Method1, Method2),
-    iso_dif(VFTable1, VFTable2),
-    % But one counter example that we need to protect against is the inlining of base class
-    % VFTable writes.  The intention here is very similar to factVFTableOverwrite, but without
-    % the complications of caring which value overwrote which otehr value.
-    not(factVFTableWrite(_Insn3, Method1, ObjectOffset, VFTable2)),
-    not(factVFTableWrite(_Insn4, Method2, ObjectOffset, VFTable1)),
-    % Those methods cannot be on the same class.
     find(Method1, Class1),
     find(Method2, Class2),
+    % Those methods cannot be on the same class.
     iso_dif(Class1, Class2),
+    % iso_dif(Method1, Method2),
+    iso_dif(VFTable1, VFTable2),
+    % But one counter example that we need to protect against is the inlining of base class
+    % VFTable writes.
+    not(factVFTableOverwrite(ObjectOffset, VFTable1, VFTable2)),
     % Debugging
     %not(factNOTMergeClasses(Class1, Class2)),
     %not(factNOTMergeClasses(Class2, Class1)),
