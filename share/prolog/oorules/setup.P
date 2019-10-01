@@ -389,42 +389,46 @@ mergeClasses(M1, M2) :-
 
 reasonForward :-
     delta_con(reasonForwardSteps,1),
-    once((concludeMethod(Out);
-          concludeVFTableOverwrite(Out);
-          concludeVirtualFunctionCall(Out);
-          concludeConstructor(Out);
-          concludeNOTConstructor(Out);
-          concludeVFTable(Out);
-          concludeVFTableWrite(Out);
-          concludeVFTableEntry(Out);
-          concludeNOTVFTableEntry(Out);
-          concludeVFTableSizeGTE(Out);
-          concludeVFTableSizeLTE(Out);
-          concludeVBTable(Out);
-          concludeVBTableWrite(Out);
-          concludeVBTableEntry(Out);
-          concludeObjectInObject(Out);
-          concludeDerivedClass(Out);
-          concludeNOTDerivedClass(Out);
-          concludeEmbeddedObject(Out);
-          concludeNOTEmbeddedObject(Out);
-          concludeDeletingDestructor(Out);
-          concludeRealDestructor(Out);
-          concludeNOTRealDestructor(Out);
-          concludeClassSizeGTE(Out);
-          concludeClassSizeLTE(Out);
-          concludeClassHasNoBase(Out);
-          concludeClassHasUnknownBase(Out);
-          concludeMergeClasses(Out);
-          concludeNOTMergeClasses(Out);
-          concludeClassCallsMethod(Out)
-        )),
-
-    % At this point we have reasoned and produced a fact to assert.  We will not backtrack into
-    % the reasoning because of once/1.
-
+    propose(Reasoner, Out),
+    debug(reason(propose), 'Proposed ~p', [Reasoner]),
+    !,
+    % At this point we have reasoned and produced a fact to assert
     % Go ahead and try_assert the fact.
     call(Out).
+
+propose(Reasoner, Out) :-
+    reasoner(Reasoner),
+    call(Reasoner, Out).
+
+reasoner(concludeMethod).
+reasoner(concludeVFTableOverwrite).
+reasoner(concludeVirtualFunctionCall).
+reasoner(concludeConstructor).
+reasoner(concludeNOTConstructor).
+reasoner(concludeVFTable).
+reasoner(concludeVFTableWrite).
+reasoner(concludeVFTableEntry).
+reasoner(concludeNOTVFTableEntry).
+reasoner(concludeVFTableSizeGTE).
+reasoner(concludeVFTableSizeLTE).
+reasoner(concludeVBTable).
+reasoner(concludeVBTableWrite).
+reasoner(concludeVBTableEntry).
+reasoner(concludeObjectInObject).
+reasoner(concludeDerivedClass).
+reasoner(concludeNOTDerivedClass).
+reasoner(concludeEmbeddedObject).
+reasoner(concludeNOTEmbeddedObject).
+reasoner(concludeDeletingDestructor).
+reasoner(concludeRealDestructor).
+reasoner(concludeNOTRealDestructor).
+reasoner(concludeClassSizeGTE).
+reasoner(concludeClassSizeLTE).
+reasoner(concludeClassHasNoBase).
+reasoner(concludeClassHasUnknownBase).
+reasoner(concludeMergeClasses).
+reasoner(concludeNOTMergeClasses).
+reasoner(concludeClassCallsMethod).
 
 % If we can reason forward once, commit so we don't backtrack and try to pass without reasoning forward.
 reasonForwardAsManyTimesAsPossible :-
