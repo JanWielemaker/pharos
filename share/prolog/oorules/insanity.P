@@ -240,23 +240,39 @@ insanityEmbeddedAndNot :-
     debug(C),
     debugln(')').
 
+:- if(current_prolog_flag(table_shared, true)).
+sanityChecks :-
+    current_prolog_flag(table_shared, true),
+    !,
+    findall(Check, sanityCheck(Check), Checks),
+    debug(shared(run), 'Running tests concurrently', []),
+    (   concurrent_maplist(not, Checks)
+    ->  debug(shared(true), 'TRUE', [])
+    ;   debug(shared(false), 'FALSE', []),
+        fail
+    ).
+:- else.
 :- table sanityChecks/0 as incremental.
 sanityChecks :-
-    not(insanityEmbeddedAndNot),
-    not(insanityConstructorAndRealDestructor),
-    %not(insanityVFTableOnTwoClasses),
-    not(insanityConstructorInVFTable),
-    not(insanityClassSizeInvalid),
-    not(insanityVFTableSizeInvalid),
-    not(insanityEmbeddedObjectLarger),
-    not(insanityEmbeddedObjectCycle),
-    not(insanityMemberPastEndOfObject),
-    not(insanityBaseVFTableLarger),
-    not(insanityConstructorAndDeletingDestructor),
-    not(insanityInheritanceLoop),
-    %not(insanityInheritanceAfterNonInheritance),
-    not(insanityContradictoryMerges),
-    not(insanityTwoRealDestructorsOnClass).
+    forall(sanityCheck(Check),
+           \+ Check).
+:- endif.
+
+sanityCheck(insanityEmbeddedAndNot).
+sanityCheck(insanityConstructorAndRealDestructor).
+%sanityCheck(insanityVFTableOnTwoClasses).
+sanityCheck(insanityConstructorInVFTable).
+sanityCheck(insanityClassSizeInvalid).
+sanityCheck(insanityVFTableSizeInvalid).
+sanityCheck(insanityEmbeddedObjectLarger).
+sanityCheck(insanityEmbeddedObjectCycle).
+sanityCheck(insanityMemberPastEndOfObject).
+sanityCheck(insanityBaseVFTableLarger).
+sanityCheck(insanityConstructorAndDeletingDestructor).
+sanityCheck(insanityInheritanceLoop).
+%sanityCheck(insanityInheritanceAfterNonInheritance).
+sanityCheck(insanityContradictoryMerges).
+sanityCheck(insanityTwoRealDestructorsOnClass).
 
 /* Local Variables:   */
 /* mode: prolog       */
