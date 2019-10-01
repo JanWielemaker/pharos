@@ -9,8 +9,9 @@ default_user_error_handler(X) :-
 
 run(X) :-
     profilingEnabled ->
-	(timed_call(solve(X), [repeating(60000, show_progress),
-         max(3600000, shut_down)]),
+	(timed_call(solve(X), [repeating(60000, show_progress)
+         %,max(3600000, shut_down)
+	 ]),
 	 reportResults,
 	 halt);
         ((solve(X),
