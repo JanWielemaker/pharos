@@ -44,8 +44,7 @@ or([H|T]) :-
    or(:).
 
 if_(If, Then, Else) :-
-   (   If
-   *-> Then
+   (   '*->'(If, Then)                  % XSB compatible syntax
    ;   Else
    ).
 
@@ -59,7 +58,7 @@ or(M, [H|T]) :-
    ).
 
 user:goal_expansion(if_(If,Then,Else),
-                    (If *-> Then ; Else)).
+                    ('*->'(If, Then) ; Else)).
 
 :- endif.
 
