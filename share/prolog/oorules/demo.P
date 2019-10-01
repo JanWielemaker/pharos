@@ -30,11 +30,6 @@ goal_expansion(iso_dif(X,Y), X \= Y).
 :- assert(rTTIEnabled).
 :- assert(profilingEnabled).
 
-run(File) :-
-   set_prolog_flag(stack_limit, 20 000 000 000),
-    run(File),
-    reportResults.
-
 run :- run('mysql.exe.facts').
 
 runDebug(File) :-
