@@ -418,7 +418,7 @@ concludeClassCallsMethod(Out) :-
 
 concludeNOTMergeClasses(Out) :-
     setof((Class1, Class2),
-          (reasonNOTMergeClasses(Class1, Class2),
+          (reasonNOTMergeClasses_new(Class1, Class2),
            iso_dif(Class1, Class2),
            not(factNOTMergeClasses(Class1, Class2)),
            % This is the spot that breaks ooex7.
