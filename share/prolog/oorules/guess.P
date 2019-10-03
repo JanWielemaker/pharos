@@ -316,13 +316,13 @@ tryDerivedClass(DerivedClass, BaseClass, Offset) :-
 guessMethodA(Method) :-
     %callingConvention(Method, '__thiscall'),
     thisCallMethod(Method, _ThisPtr, uncertain),
+    not(factMethod(Method)),
+    not(factNOTMethod(Method)),
     % Intentionally use the _unvalidated_ access to guess that the Method is actually object
     % oriented.  This will be a problem as we export more facts where we don't have the correct
     % calling convention data (e.g. Linux executables)
     methodMemberAccess(_Insn, Method, Offset, _Size),
-    Offset < 100,
-    not(factMethod(Method)),
-    not(factNOTMethod(Method)).
+    Offset < 100.
 
 guessMethod :-
     osetof(Method,
@@ -356,14 +356,14 @@ guessMethod :-
 guessMethodC(Method) :-
     %callingConvention(Method, '__thiscall'),
     thisCallMethod(Method, _ThisPtr, uncertain),
+    not(factMethod(Method)),
+    not(factNOTMethod(Method)),
     % Also intentionally an unvalidated methodMemberAccess because we're guessing the
     % factMethod() that is required for the validMethodMemberAccess.
     methodMemberAccess(_Insn1, Method, Offset, _Size1),
     Offset < 100,
     validFuncOffset(_Insn2, Caller, Method, _Size2),
-    factMethod(Caller),
-    not(factMethod(Method)),
-    not(factNOTMethod(Method)).
+    factMethod(Caller).
 
 guessMethod :-
     osetof(Method,
@@ -379,15 +379,15 @@ guessMethod :-
 guessMethodD(Method) :-
     % This may need to be weakened past uncertain... :-(
     thisCallMethod(Method, _ThisPtr, uncertain),
+    not(factMethod(Method)),
+    not(factNOTMethod(Method)),
     validMethodMemberAccess(_Insn0, Method, Offset, _Size0),
     Offset < 100,
     validFuncOffset(_Insn1, Caller1, Method, _Size1),
     validFuncOffset(_Insn2, Caller2, Method, _Size2),
     iso_dif(Caller1, Caller2),
     validFuncOffset(_Insn3, Caller3, Method, _Size3),
-    iso_dif(Caller1, Caller3),
-    not(factMethod(Method)),
-    not(factNOTMethod(Method)).
+    iso_dif(Caller1, Caller3).
 
 guessMethod :-
     osetof(Method,
@@ -402,15 +402,15 @@ guessMethod :-
 guessMethodE(Method) :-
     % This may need to be weakened past uncertain... :-(
     thisCallMethod(Method, _ThisPtr, uncertain),
+    not(factMethod(Method)),
+    not(factNOTMethod(Method)),
     validMethodMemberAccess(_Insn0, Method, Offset, _Size0),
     Offset < 100,
     thisPtrUsage(_Insn1, Caller, ThisPtr, Method),
     thisPtrUsage(_Insn2, Caller, ThisPtr, Method2),
     iso_dif(Method, Method2),
     thisPtrUsage(_Insn3, Caller, ThisPtr, Method3),
-    iso_dif(Method, Method3),
-    not(factMethod(Method)),
-    not(factNOTMethod(Method)).
+    iso_dif(Method, Method3).
 
 
 guessMethod :-
@@ -427,11 +427,11 @@ guessMethodF(Method) :-
     %thisCallMethod(Method, _ThisPtr, _Certainty),
     (thisCallMethod(Method, _ThisPtr, certain);
      thisCallMethod(Method, _ThisPtr, uncertain)),
+    not(factMethod(Method)),
+    not(factNOTMethod(Method)),
     validMethodMemberAccess(_Insn1, Method, Offset, _Size1),
     Offset < 100,
-    (possibleConstructor(Method); possibleDestructor(Method)),
-    not(factMethod(Method)),
-    not(factNOTMethod(Method)).
+    (possibleConstructor(Method); possibleDestructor(Method)).
 
 guessMethod :-
     osetof(Method,
@@ -445,11 +445,11 @@ guessMethodG(Method) :-
     %thisCallMethod(Method, _ThisPtr1, _Certainty),
     (thisCallMethod(Method, _ThisPtr1, certain);
      thisCallMethod(Method, _ThisPtr1, uncertain)),
+    not(factMethod(Method)),
+    not(factNOTMethod(Method)),
     thisPtrUsage(_Insn, Caller, _ThisPtr2, Method),
     factMethod(Caller),
-    (possibleConstructor(Method); possibleDestructor(Method)),
-    not(factMethod(Method)),
-    not(factNOTMethod(Method)).
+    (possibleConstructor(Method); possibleDestructor(Method)).
 
 guessMethod :-
     osetof(Method,
