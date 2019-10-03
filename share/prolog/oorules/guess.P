@@ -744,23 +744,11 @@ guessMergeClasses :-
 % resolved through.  Technically, I think this is a case of choosing arbitrarily between
 % multiple valid solutions.  It might be possible to prove which constructor the method is on.
 guessMergeClassesB(Class1, Class2) :-
-    % Start with a non-overwritten VFTable.
-    factVFTableWrite(_Insn, Method2, _ObjectOffset, VFTable),
-    not(factVFTableOverwrite(VFTable, _OtherVFTable, _OtherOffset)),
     factVFTableEntry(VFTable, _VFTableOffset, Entry1),
+    not(purecall(Entry1)), % Never merge purecall methods into classes.
     dethunk(Entry1, Method1),
     factMethod(Method1),
-    not(purecall(Entry1)), % Never merge purecall methods into classes.
     not(purecall(Method1)), % Never merge purecall methods into classes.
-
-    % The method is not also is some other VFTable.  When adding thunk support, Cory decided to
-    % allow the second entry to differ so long as it resolved to the same place.  It's unclear
-    % if this is really correct.
-    not((
-               factVFTableEntry(OtherVFTable, _OtherVFTableOffset, Entry1A),
-               dethunk(Entry1A, Method1),
-               iso_dif(VFTable, OtherVFTable)
-       )),
 
     % A further complication arose in this guessing heuristic.  It appears that if the method
     % in question is actually an import than this rule is not always true.  For example, in
@@ -771,7 +759,21 @@ guessMergeClassesB(Class1, Class2) :-
     % have the vftable for the method that's imported...
     not(symbolProperty(Method1, virtual)),
 
+    % The method is not also is some other VFTable.  When adding thunk support, Cory decided to
+    % allow the second entry to differ so long as it resolved to the same place.  It's unclear
+    % if this is really correct.
+    not((
+               factVFTableEntry(OtherVFTable, _OtherVFTableOffset, Entry1A),
+               dethunk(Entry1A, Method1),
+               iso_dif(VFTable, OtherVFTable)
+       )),
+
     find(Method1, Class1),
+
+    % Start with a non-overwritten VFTable.
+    factVFTableWrite(_Insn, Method2, _ObjectOffset, VFTable),
+    not(factVFTableOverwrite(VFTable, _OtherVFTable, _OtherOffset)),
+
     find(Method2, Class2),
     %logdebug('Proposing factMergeClasses_B('),
     %logdebug(Method1), logdebug(', '),
