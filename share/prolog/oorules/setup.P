@@ -123,7 +123,7 @@ debug_callback :- statistics, (statistics(summarize_idg) ; true).
 :- index(factObjectInObject/3, [1,2,3]).
 :- dynamic factObjectInObject/3 as incremental.
 :- index(factDerivedClass/3, [1,2,3, 1+3]).
-:- dynamic factDerivedClass/3 as incremental.
+:- dynamic factDerivedClass/3 as incremental,abstract(0).
 :- index(factNOTDerivedClass/3, [1,2,3, 1+3]).
 :- dynamic factNOTDerivedClass/3 as incremental.
 :- index(factEmbeddedObject/3, [1,2,3]).
@@ -137,7 +137,7 @@ debug_callback :- statistics, (statistics(summarize_idg) ; true).
 :- dynamic factClassHasNoBase/1 as incremental.
 :- dynamic factClassHasUnknownBase/1 as incremental.
 :- index(factNOTMergeClasses/2, [1+2]).
-:- dynamic factNOTMergeClasses/2 as incremental.
+:- dynamic factNOTMergeClasses/2 as incremental,abstract(0).
 :- index(factClassCallsMethod/2, [1,2]).
 :- dynamic factClassCallsMethod/2 as incremental.
 
@@ -239,7 +239,7 @@ classArgs(factClassSizeLTE/2, 1).
 
 % Can I put this somewhere else?
 :- index(findint/2, [1, 2, 1+2]).
-:- dynamic findint/2 as incremental.
+:- dynamic findint/2 as incremental,abstract(0).
 
 % ============================================================================================
 % Other modules.
