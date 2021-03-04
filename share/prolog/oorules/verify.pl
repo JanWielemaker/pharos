@@ -118,7 +118,8 @@ check_tabled_pred(PI) :-
     print_message(informational, checking_tables(PI)).
 
 check_table(Head, Wrapped) :-
-    maybe_break(Head),
+    count(Head, NthCall),
+    maybe_break(Head, NthCall),
     (   call(Wrapped)
     ;   current_table(Head, ATrie),
         '$tbl_table_status'(ATrie, complete),
@@ -143,10 +144,10 @@ check_table(Goal) :-
     thread_create(get_all_solutions(Goal, Updates, Me), Id, []),
     thread_get_message(answers(OkAnswers)),
     thread_join(Id),
-    count(Goal, NthCall),
     (   maplist(=@=, OkAnswers, Answers)
     ->  true
-    ;   format(user_error, 'Wrong answers for ~p (iteration ~d) ~n',
+    ;   current_count(Goal, NthCall),
+        format(user_error, 'Wrong answers for ~p (iteration ~d) ~n',
                [Goal, NthCall]),
         show_difference(Answers, OkAnswers),
         (   current_prolog_flag(break_level, _) % interactive
@@ -207,7 +208,11 @@ copy_from_transaction(erased(ClauseRef)) :-
 
 count(Goal, Count) :-
     count_engine(Engine),
-    engine_post(Engine, Goal, Count).
+    engine_post(Engine, inc(Goal), Count).
+
+current_count(Goal, Count) :-
+    count_engine(Engine),
+    engine_post(Engine, val(Goal), Count).
 
 count_engine(Engine) :-
     count_engine_store(Engine),
@@ -217,13 +222,24 @@ count_engine(Engine) :-
     asserta(count_engine_store(Engine)).
 
 do_count :-
-    engine_fetch(Goal),
+    engine_fetch(Action),
+    do_count(Action).
+
+do_count(inc(Goal)) :-
     variant_sha1(Goal, Hash),
     (   retract(checked(Hash, Goal, Count0))
     ->  Count is Count0+1
     ;   Count = 1
     ),
     asserta(checked(Hash, Goal, Count)),
+    engine_yield(Count),
+    do_count.
+do_count(val(Goal)) :-
+    variant_sha1(Goal, Hash),
+    (   checked(Hash, Goal, Count)
+    ->  true
+    ;   Count = 0
+    ),
     engine_yield(Count),
     do_count.
 
@@ -237,19 +253,16 @@ break(Goal, Count) :-
     variant_sha1(Goal, Hash),
     asserta(break(Hash, Goal, Count)).
 
-maybe_break(Goal) :-
-    thread_self(main),
-    variant_sha1(Goal, Hash),
+maybe_break(Goal, Count) :-
     break(Hash, Goal, BreatAt),
-    (   checked(Hash, Goal, Count0)
-    ->  Count is Count0+1
-    ;   Count = 1
-    ),
     Count =:= BreatAt,
+    thread_self(main),
+    current_prolog_flag(break_level, 0),
+    variant_sha1(Goal, Hash),
     !,
     format(user_error, 'Break on ~p, iteration ~D~n', [Goal, BreatAt]),
     break.
-maybe_break(_).
+maybe_break(_, _).
 
 show_difference(Answers, OkAnswers) :-
     length(Answers, Found),
