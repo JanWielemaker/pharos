@@ -48,6 +48,10 @@ queued_from(Variant) :-
     ;   true
     ).
 
+clause_head(Node, Head) :-
+    integer(Node),
+    !,
+    trie_term(Node, Head).
 clause_head(ClauseRef, Head) :-
     '$tabling':'$clause'(Head, _Body, ClauseRef, _Bindings).
 
@@ -60,3 +64,7 @@ user:portray(ClauseRef) :-
     blob(ClauseRef, clause),
     clause_head(ClauseRef, Head),
     format('~w=>(~p)', [ClauseRef, Head]).
+
+clr :-
+    format(user_error, '\e[3J\e[H\e[2J', []),
+    format(user_error, '\e[3J', []).
